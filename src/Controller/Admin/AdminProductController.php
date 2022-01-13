@@ -22,7 +22,7 @@ class AdminProductController extends AbstractController
     }
 
     /**
-     * @Route("product/{id}", name="product_show")
+     * @Route("product/{id}", name="admin_product_show")
      */
     public function AdminProductShow($id, ProductRepository $productRepository)
     {

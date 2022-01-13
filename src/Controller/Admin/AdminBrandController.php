@@ -54,6 +54,7 @@ class AdminBrandController extends AbstractController
                     $this->getParameter('images_directory'),
                     $newFilename
                 );
+                $brand->setMedia($newFilename);
             }
             $entityManagerInterface->persist($brand);
             $entityManagerInterface->flush();

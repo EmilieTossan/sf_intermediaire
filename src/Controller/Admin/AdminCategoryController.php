@@ -23,7 +23,7 @@ class AdminCategoryController extends AbstractController
     }
 
     /**
-     * @Route("category/{id}", name="category_show")
+     * @Route("category/{id}", name="admin_category_show")
      */
     public function AdminCategoryShow($id, CategoryRepository $categoryRepository)
     {
@@ -54,6 +54,7 @@ class AdminCategoryController extends AbstractController
                     $this->getParameter('images_directory'),
                     $newFilename
                 );
+                $category->setMedia($newFilename);
             }
             $entityManagerInterface->persist($category);
             $entityManagerInterface->flush();

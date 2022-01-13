@@ -3,6 +3,7 @@
 {% block main %}
 
     {% for brand in brands %}
+        <img src="{{ asset('media/' ~ brand.media) }}" alt="{{ brand.name }}">
         <h2><a href="{{ path ("brand_show", {'id' : brand.id })}}">{{ brand.name }}</a></h2>
         <h3>{{ brand.description }}</h3>
     {% endfor %}

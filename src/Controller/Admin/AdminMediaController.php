@@ -29,7 +29,7 @@ class AdminMediaController extends AbstractController
             if($mediaFile){
                 $originalFilename = pathinfo($mediaFile->getClientOriginalName(), PATHINFO_FILENAME);
                 $safeFilename = $sluggerInterface->slug($originalFilename);
-                $newFilename = $safeFilename . '-' . uniqid() . '.' . $mediaFile->guessExtention();
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $mediaFile->guessExtension();
                 $mediaFile->move(
                     $this->getParameter('images_directory'),
                     $newFilename
