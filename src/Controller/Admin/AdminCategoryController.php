@@ -36,7 +36,8 @@ class AdminCategoryController extends AbstractController
      */
     public function adminCreateCategory(
         Request $request,
-        EntityManagerInterface $entityManagerInterface
+        EntityManagerInterface $entityManagerInterface,
+        SluggerInterface $sluggerInterface
     )
     {
         $category = new Category();
@@ -44,6 +45,16 @@ class AdminCategoryController extends AbstractController
         $categoryForm->handleRequest($request);
 
         if($categoryForm->isSubmitted() && $categoryForm->isValid()){
+            $mediaFile = $categoryForm->get('media')->getData();
+            if($mediaFile){
+                $originalFilename = pathinfo($mediaFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $sluggerInterface->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $mediaFile->guessExtension();
+                $mediaFile->move(
+                    $this->getParameter('images_directory'),
+                    $newFilename
+                );
+            }
             $entityManagerInterface->persist($category);
             $entityManagerInterface->flush();
             return $this->redirectToRoute('admin_category_list');
@@ -66,7 +77,7 @@ class AdminCategoryController extends AbstractController
         $categoryForm->handleRequest($request);
 
         if ($categoryForm->isSubmitted() && $categoryForm->isValid()) {
-            /*$mediaFile = $categoryForm->get('media')->getData();
+            $mediaFile = $categoryForm->get('media')->getData();
             if ($mediaFile) {
                 $originalFilename = pathinfo($mediaFile->getClientOriginalName(), PATHINFO_FILENAME);
                 $safeFilename = $sluggerInterface->slug($originalFilename);
@@ -76,7 +87,7 @@ class AdminCategoryController extends AbstractController
                     $newFilename
                 );
                 $category->setMedia($newFilename);
-            }*/
+            }
             $entityManagerInterface->persist($category);
             $entityManagerInterface->flush();
             return $this->redirectToRoute('admin_category_list');

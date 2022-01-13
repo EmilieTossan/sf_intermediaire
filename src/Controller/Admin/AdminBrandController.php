@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class AdminBrandController extends AbstractController
 {
@@ -35,7 +36,8 @@ class AdminBrandController extends AbstractController
      */
     public function adminCreateBrand(
         Request $request,
-        EntityManagerInterface $entityManagerInterface
+        EntityManagerInterface $entityManagerInterface,
+        SluggerInterface $sluggerInterface
     )
     {
         $brand = new Brand();
@@ -43,6 +45,16 @@ class AdminBrandController extends AbstractController
         $brandForm->handleRequest($request);
 
         if($brandForm->isSubmitted() && $brandForm->isValid()){
+            $mediaFile = $brandForm->get('media')->getData();
+            if($mediaFile){
+                $originalFilename = pathinfo($mediaFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $sluggerInterface->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $mediaFile->guessExtension();
+                $mediaFile->move(
+                    $this->getParameter('images_directory'),
+                    $newFilename
+                );
+            }
             $entityManagerInterface->persist($brand);
             $entityManagerInterface->flush();
             return $this->redirectToRoute('admin_brand_list');
@@ -57,13 +69,25 @@ class AdminBrandController extends AbstractController
         $id,
         BrandRepository $brandRepository,
         Request $request,
-        EntityManagerInterface $entityManagerInterface
+        EntityManagerInterface $entityManagerInterface,
+        SluggerInterface $sluggerInterface
     ){
         $brand = $brandRepository->find($id);
         $brandForm = $this->createForm(BrandType::class, $brand);
         $brandForm->handleRequest($request);
 
         if($brandForm->isSubmitted() && $brandForm->isValid()){
+            $mediaFile = $brandForm->get('media')->getData();
+            if($mediaFile){
+                $originalFilename = pathinfo($mediaFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $sluggerInterface->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $mediaFile->guessExtension();
+                $mediaFile->move(
+                    $this->getParameter('images_directory'),
+                    $newFilename
+                );
+                $brand->setMedia($newFilename);
+            }
             $entityManagerInterface->persist($brand);
             $entityManagerInterface->flush();
             return $this->redirectToRoute('admin_brand_list');

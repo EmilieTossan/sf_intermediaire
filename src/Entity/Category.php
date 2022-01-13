@@ -24,6 +24,9 @@ class Category
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Product::class)]
     private $products;
 
+    #[ORM\Column(type: 'string', length: 255)]
+    private $media;
+
     public function __construct()
     {
         $this->products = new ArrayCollection();
@@ -84,6 +87,18 @@ class Category
                 $product->setCategory(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getMedia(): ?string
+    {
+        return $this->media;
+    }
+
+    public function setMedia(string $media): self
+    {
+        $this->media = $media;
 
         return $this;
     }
