@@ -8,7 +8,12 @@
 </head>
 <body>
 
+    {% for gproduct in gproducts.getAll %}
+        <h3>{{ gproduct.name }}</h3>
+    {% endfor %}
+
     <h1>{{ admin }}</h1>
+    
     {% block main %}{% endblock %}
     
 </body>

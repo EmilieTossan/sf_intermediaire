@@ -1,9 +1,10 @@
 twig:
-    default_path: '%kernel.project_dir%/templates'
+    default_path: "%kernel.project_dir%/templates"
 
     globals:
-        front: 'Vous êtes sur la partie front.'
-        admin: 'Vous êtes sur la partie admin.'
+        front: "Vous êtes sur la partie front."
+        admin: "Vous êtes sur la partie admin."
+        gproducts: '@App\Globals\Products'
 
 when@test:
     twig:
