@@ -8,6 +8,14 @@
 </head>
 <body>
 
+    {% for gbrand in gbrands.getAll %}
+        <h3>{{ gbrand.name }}</h3>
+    {% endfor %}
+
+    {% for gcategory in gcategories.getAll %}
+        <h3>{{ gcategory.name }}</h3>
+    {% endfor %}
+
     {% for gproduct in gproducts.getAll %}
         <h3>{{ gproduct.name }}</h3>
     {% endfor %}
