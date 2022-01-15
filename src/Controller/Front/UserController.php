@@ -26,6 +26,7 @@ class UserController extends AbstractController
         $userForm->handleRequest($request);
         if($userForm->isSubmitted() && $userForm->isValid()){
             $user->setRoles(["ROLE_USER"]);
+            $user->setDate(new \DateTime("NOW"));
             // On récupère le mot de passe entré dans le formulaire
             $plainPassWord = $userForm->get('password')->getData();
             // On hashe le mot de passe pour le sécuriser
@@ -39,7 +40,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("update/user", name="user_update")
+     * @Route("update/user/{id}", name="user_update")
      */
     public function updateUser(
         $id,
@@ -53,9 +54,7 @@ class UserController extends AbstractController
         $userForm->handleRequest($request);
         if($userForm->isSubmitted() && $userForm->isValid()){
             $user->setRoles(["ROLE_USER"]);
-            // On récupère le mot de passe entré dans le formulaire
             $plainPassWord = $userForm->get('password')->getData();
-            // On hashe le mot de passe pour le sécuriser
             $hashedPassword = $userPasswordHasherInterface->hashPassword($user, $plainPassWord);
             $user->setPassword($hashedPassword);
             $entityManagerInterface->persist($user);
